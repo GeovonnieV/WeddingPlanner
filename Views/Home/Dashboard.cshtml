@@ -1,0 +1,59 @@
+<div>
+    <h1>DashBoard</h1>
+
+    <h2>@ViewBag.SpecificUser.UserId</h2>
+
+    <div>
+        @{
+            foreach (var item in ViewBag.AllWeddings)
+            {
+                var wedding = item;
+                @* weddings this user is in aka RSVP to *@
+                if ( ((IEnumerable<Association>)wedding.UsersInThisWedding).Any(u => u.UserId == ViewBag.SpecificUser.UserId))
+                {
+                    <p>Have RSVP'd</p>
+                }
+                @* else show wedding logged in user is not attending *@
+                else
+                {
+                    <p>Loser. Go RSVP!</p>
+                     @model Association
+                    @* rsvp button will add this user to that wedding *@
+                    <form asp-action="AddUserToWedding" asp-controller="Home" method="POST">
+                        @* user will need this wedding ID so it know which one to attend *@
+                        <span asp-validation-for="WeddingId"></span>
+                        <input type="hidden" asp-for="WeddingId" value="@item.WeddingId">
+
+                        @* logged in user will be the person going to this wedding *@
+                        <span asp-validation-for="UserId"></span>
+                        <input type="hidden" asp-for="UserId" value="@ViewBag.SpecificUser.UserId">
+
+                        <button type="submit">RSVP</button>
+                    </form>
+
+                }
+
+                @* show all LOGED IN USERS weddings with a del btn *@
+                if (item.UserId == ViewBag.SpecificUser.UserId)
+                {
+                    @* gets the guest count *@
+                    var usersList = ((IEnumerable<dynamic>)item.UsersInThisWedding);
+                    var guestCount = usersList.Count();
+
+                    <p><a href="OneWedding/@item.WeddingId"> @item.WedderOne & @item.WedderTwo :</a> @item.WeddingDate : @item.Address : @guestCount:</p>
+                    
+                    <button> <a href="Delete/@item.WeddingId">Delete</a> </button>
+                    
+                }
+                @* give me the weddings this logged in users is not going to *@
+                
+
+            }
+
+
+        }
+    </div>
+    @*  *@
+    <br>
+    <button><a href="AddWedding/@ViewBag.SpecificUser.UserId">New Wedding</a></button>
+</div>

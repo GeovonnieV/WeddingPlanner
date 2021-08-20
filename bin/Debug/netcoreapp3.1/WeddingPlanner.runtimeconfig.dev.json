@@ -1,0 +1,8 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "C:\\Users\\Geo\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\Geo\\.nuget\\packages"
+    ]
+  }
+}

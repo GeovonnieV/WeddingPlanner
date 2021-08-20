@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+    <h1>Login</h1>
+    <a href="/">Register</a>
+    @* Login Form *@
+    @model LoginUser
+    @* go to the LoginPost method in the Home controller *@
+    <form asp-action="LoginPost" asp-controller="Home" method="post">
+        @* Email input *@
+        <span asp-validation-for="Email"></span>
+        <label asp-for="Email">Email:</label>
+        <input type="email" asp-for="Email"></input>
+        <br>
+        @* Password input *@
+        <span asp-validation-for="Password"></span>
+        <label asp-for="Password">Password:</label>
+        <input type="password" asp-for="Password"></input>
+        <br>
+        <button type="submit">Log in</button>
+    </form>
+</div>
+</body>
+</html>

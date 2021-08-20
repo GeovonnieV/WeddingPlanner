@@ -1,0 +1,12 @@
+<div>
+    <h1>@ViewBag.SpecificWedding.WedderOne and @ViewBag.SpecificWedding.WedderTwo Wedding </h1>
+    <p>Date: @ViewBag.SpecificWedding.WeddingDate </p>
+    @* guest going to wedding *@
+    <h3>Guest</h3>
+    @{
+        foreach (var item in ViewBag.GuestInThisWedding)
+        {
+            <p>@item.FirstName</p>
+        }
+    }
+</div>
