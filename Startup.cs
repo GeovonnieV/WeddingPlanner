@@ -18,6 +18,7 @@ namespace WeddingPlanner
         public IConfiguration Configuration { get; }
         public void ConfigureServices (IServiceCollection services)
         {
+            services.AddSession();
             services.AddDbContext<MyContext>(options => options.UseMySql (Configuration["DBInfo:ConnectionString"]));
             services.AddMvc(options => options.EnableEndpointRouting = false);
         }
@@ -27,8 +28,9 @@ namespace WeddingPlanner
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseSession();
             app.UseStaticFiles();
-            app.UseMvc();
+            app.UseMvc(); // Make sure this is last
         }
     }
 }

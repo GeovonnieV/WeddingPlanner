@@ -11,11 +11,13 @@
                 @* weddings this user is in aka RSVP to *@
                 if ( ((IEnumerable<Association>)wedding.UsersInThisWedding).Any(u => u.UserId == ViewBag.SpecificUser.UserId))
                 {
+                    <h3>@wedding.WedderOne & @wedding.WedderTwo</h3>
                     <p>Have RSVP'd</p>
                 }
                 @* else show wedding logged in user is not attending *@
                 else
                 {
+                    <h3>@wedding.WedderTwo & @wedding.WedderOne</h3>
                     <p>Loser. Go RSVP!</p>
                      @model Association
                     @* rsvp button will add this user to that wedding *@

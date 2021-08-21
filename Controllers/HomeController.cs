@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+// to use sessions
+using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -39,30 +41,25 @@ namespace WeddingPlanner.Controllers
         // Get dashboard
         [HttpGet("Dashboard")]
         // user passed in from Log in
-        public IActionResult Dashboard(User user)
+        public IActionResult Dashboard()
             {
+                // get the user Id in session
+                int?  userId = HttpContext.Session.GetInt32("userId"); 
+             
                 // grab the current user
-                ViewBag.SpecificUser = user;
+               var UserInDb =  _context.Users.FirstOrDefault(user => user.UserId == userId );
+               ViewBag.SpecificUser = UserInDb;
+
                 // get all the wedding in the db
                 ViewBag.AllWeddings = _context.Weddings;
                 // weddings this user is going to 
-                ViewBag.WeddingsThisUserIsGoingTo = _context.Weddings
+                var test = _context.Weddings
                     .Include(wed => wed.UsersInThisWedding)
-                    .Where(wed => wed.UsersInThisWedding.All(c => c.UserId != user.UserId))
-                    .ToList();
+                    .Where(wed => wed.UsersInThisWedding.All(c => c.UserId == userId)).ToList();
 
                 return View();
             }
 
-        // to redirect to the dashboard
-        [HttpGet("Dashboard/{userId}")]
-        public IActionResult DashboardRedirect(int userId)
-            {
-                // find a user in the db with the userId we got
-                var userInDb = _context.Users.FirstOrDefault(u => u.UserId == userId);
-                // then pass that user in the Dashboard
-                return View("Dashboard", userInDb);
-            }
         
         [HttpGet("AddWedding/{currentUserId}")]
         // current
@@ -188,10 +185,11 @@ namespace WeddingPlanner.Controllers
                     // handle failure (this should be similar to how "existing email" is handled)
                     ModelState.AddModelError("Password", "Not the right password cops are being called!");
                 }
-
+                // assign user ID to sessions
+                HttpContext.Session.SetInt32("userId", userInDb.UserId);
                 // If everything is good go to the Dashboard view page 
                 // pass in the user we found in the db into it
-                return RedirectToAction("Dashboard", userInDb);
+                return RedirectToAction("Dashboard");
             }
             // go back to login if fails
             return View("Login");
